@@ -1,0 +1,4 @@
+{
+  "critical_inputs":["pyproject.toml"],
+  "outputs": ["PRD.md", "progress.md"]
+}

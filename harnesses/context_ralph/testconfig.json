@@ -1,0 +1,3 @@
+{
+  "outputs": ["claude_logs/**/agent_usage.json"]
+}
