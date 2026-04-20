@@ -1,5 +1,4 @@
 {
-  "showClearContextOnPlanAccept": true,
   "autoMemoryEnabled": false,
   "hooks": {
     "PreToolUse": [
@@ -16,6 +15,7 @@
   },
   "sandbox": {
     "enabled": true,
+    "failIfUnavailable": true,
     "allowUnsandboxedCommands": false,
     "autoAllowBashIfSandboxed": true,
     "filesystem": {
