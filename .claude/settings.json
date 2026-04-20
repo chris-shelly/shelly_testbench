@@ -1,6 +1,7 @@
 {
   "showClearContextOnPlanAccept": true,
   "autoMemoryEnabled": false,
+  "disableAllHooks": true,
   "hooks": {
     "PreToolUse": [
       {

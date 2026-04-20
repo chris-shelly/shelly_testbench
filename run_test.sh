@@ -129,29 +129,41 @@ cp -r "$HARNESS_DIR"/harness "$TEST_DIR/"
 # Copy dotfiles explicitly (glob skips them)
 cp -r "$HARNESS_DIR/.claude" "$TEST_DIR/"
 
-# Patch copied settings.json: disable agent memory and add default filesystem-confinement
-# deny rules (union with any deny rules the harness already declared).
+# Merge test_env_control settings + hooks into the copied .claude/.
+# The env settings file declares the sandbox config and the PreToolUse
+# restrict-to-project hook; its referenced Python script must live at
+# $CLAUDE_PROJECT_DIR/.claude/hooks/ inside the staged test dir.
 SETTINGS_FILE="$TEST_DIR/.claude/settings.json"
-if [ -f "$SETTINGS_FILE" ]; then
-  DEFAULT_DENY='[
-    "Read(//**)",   "Read(~/**)",   "Read(../**)",
-    "Edit(//**)",   "Edit(~/**)",   "Edit(../**)",
-    "Write(//**)",  "Write(~/**)",  "Write(../**)",
+ENV_SETTINGS="$SCRIPT_DIR/test_env_control/in_test_settings.json"
+ENV_HOOKS_DIR="$SCRIPT_DIR/test_env_control/hooks"
 
-    "Bash(cd /*)",  "Bash(cd ~/*)", "Bash(cd ..*)",
-    "Bash(cat /*)", "Bash(cat ~/*)",
-    "Bash(less /*)","Bash(less ~/*)",
-    "Bash(head /*)","Bash(head ~/*)",
-    "Bash(tail /*)","Bash(tail ~/*)",
-    "Bash(cp /*)",  "Bash(cp ~/*)",
-    "Bash(mv /*)",  "Bash(mv ~/*)",
-    "Bash(rm /*)",  "Bash(rm ~/*)"
-  ]'
+if [ ! -f "$ENV_SETTINGS" ]; then
+  echo "Error: missing test env settings at $ENV_SETTINGS"
+  exit 1
+fi
+validate_config "$ENV_SETTINGS"
+
+mkdir -p "$TEST_DIR/.claude/hooks"
+if [ -d "$ENV_HOOKS_DIR" ]; then
+  cp -r "$ENV_HOOKS_DIR"/. "$TEST_DIR/.claude/hooks/"
+fi
+
+if [ -f "$SETTINGS_FILE" ]; then
   tmp=$(mktemp)
   CLEANUP_FILES+=("$tmp")
-  jq --argjson deny "$DEFAULT_DENY" '
-    . + {agentMemoryEnabled: false}
-    | .permissions = ((.permissions // {}) | .deny = (((.deny // []) + $deny) | unique))
+  # Deep-merge env settings onto the harness settings, then rebuild .hooks
+  # so that per-event arrays (PreToolUse, FileChanged, ...) are concatenated
+  # rather than replaced. Harness `FileChanged` entries survive alongside
+  # the env `PreToolUse` hook.
+  jq --slurpfile env "$ENV_SETTINGS" '
+    . as $base
+    | ($base * $env[0])
+    | .hooks = (
+        ($base.hooks // {}) as $bh
+        | ($env[0].hooks // {}) as $eh
+        | reduce (($bh | keys_unsorted) + ($eh | keys_unsorted) | unique)[] as $k
+            ({}; .[$k] = (($bh[$k] // []) + ($eh[$k] // [])))
+      )
   ' "$SETTINGS_FILE" > "$tmp" && mv "$tmp" "$SETTINGS_FILE"
 fi
 
