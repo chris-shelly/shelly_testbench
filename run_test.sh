@@ -120,6 +120,7 @@ if [ -d "$TEST_DIR" ]; then
   rm -rf "$TEST_DIR"
 fi
 
+mkdir -p "$(dirname "$TEST_DIR")"
 cp -r "$REPO_DIR" "$TEST_DIR"
 rm -f "$TEST_DIR/testconfig.json"
 
@@ -188,6 +189,9 @@ if [ "$MISSING" -eq 1 ]; then
 fi
 
 chmod +x "$TEST_DIR/unit_tests.sh"
+# Harness scripts may lose the exec bit over git/WSL drvfs checkouts; ensure
+# everything under the staged harness/ is runnable before the agent loop.
+find "$TEST_DIR/harness" -type f -name '*.sh' -exec chmod +x {} +
 echo "Test directory ready. Critical files verified."
 echo ""
 
