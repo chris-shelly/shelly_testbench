@@ -111,10 +111,10 @@ The dataset lives on disk as a committed JSON file (`scripts/swe_bench/data/swe_
 **Description:** As a user, I want a manifest of each fetch run so I can audit what was written and reproduce the set later.
 
 **Acceptance Criteria:**
-- [ ] After a run, write `scripts/swe_bench/manifest/<UTC-timestamp>.json` containing: run timestamp, dataset path + sha256, CLI args, and for each instance: `instance_id`, `repo`, `base_commit`, status (`written` | `skipped` | `failed`), error message if failed, counts `fail_to_pass` and `pass_to_pass`
-- [ ] Manifest is written even on partial failure
-- [ ] Add `scripts/swe_bench/tests/test_manifest.py` asserting the manifest shape
-- [ ] Typecheck passes
+- [x] After a run, write `scripts/swe_bench/manifest/<UTC-timestamp>.json` containing: run timestamp, dataset path + sha256, CLI args, and for each instance: `instance_id`, `repo`, `base_commit`, status (`written` | `skipped` | `failed`), error message if failed, counts `fail_to_pass` and `pass_to_pass`
+- [x] Manifest is written even on partial failure
+- [x] Add `scripts/swe_bench/tests/test_manifest.py` asserting the manifest shape
+- [x] Typecheck passes
 
 ### US-010: Top-level docs update
 **Description:** As a user of the testbench, I want the root `README.md` to point at the SWE-bench fetcher so I know how to populate `repos/` from the dataset.

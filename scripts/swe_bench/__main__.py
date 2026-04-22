@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 # Ensure repo root is importable
@@ -13,6 +14,12 @@ if str(_REPO_ROOT) not in sys.path:
 
 from scripts.swe_bench.clone import clone_at_commit
 from scripts.swe_bench.loader import load_dataset
+from scripts.swe_bench.manifest import (
+    _sha256,
+    build_instance_entry,
+    build_manifest,
+    write_manifest,
+)
 from scripts.swe_bench.select import select_instances
 from scripts.swe_bench.writer import write_repo
 
@@ -71,7 +78,8 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     # Load dataset
-    dataset = load_dataset(args.dataset)
+    dataset_path = Path(args.dataset)
+    dataset = load_dataset(dataset_path)
 
     # Select instances
     instance_ids = None
@@ -87,6 +95,7 @@ def main(argv: list[str] | None = None) -> int:
 
     total = len(instances)
     failed = 0
+    manifest_entries: list[dict] = []
 
     for i, instance in enumerate(instances, 1):
         iid = instance["instance_id"]
@@ -101,9 +110,29 @@ def main(argv: list[str] | None = None) -> int:
             write_repo(instance, args.repos_root, source_dir, force=args.force)
 
             print("done")
+            manifest_entries.append(build_instance_entry(instance, "written"))
+        except FileExistsError:
+            print("skipped (already exists)")
+            manifest_entries.append(build_instance_entry(instance, "skipped"))
         except Exception as exc:
             print(f"FAILED: {exc}", file=sys.stderr)
             failed += 1
+            manifest_entries.append(
+                build_instance_entry(instance, "failed", error=str(exc))
+            )
+
+    # Write manifest even on partial failure
+    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H-%M-%SZ")
+    manifest = build_manifest(
+        timestamp=timestamp,
+        dataset_path=str(dataset_path),
+        dataset_sha256=_sha256(dataset_path),
+        cli_args=argv if argv is not None else sys.argv[1:],
+        instances=manifest_entries,
+    )
+    manifest_dir = Path(__file__).resolve().parent / "manifest"
+    manifest_path = write_manifest(manifest, manifest_dir)
+    print(f"Manifest written to {manifest_path}")
 
     if failed:
         print(f"\n{failed}/{total} instance(s) failed.", file=sys.stderr)
