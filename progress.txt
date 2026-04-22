@@ -7,3 +7,13 @@
   - download_dataset.py and scripts/swe_bench/README.md were already committed before this iteration.
   - `python -m py_compile <file>` is the typecheck method for this project.
 ---
+
+## Iteration 2 - US-002: Dataset loader module
+- What was implemented: Created `scripts/swe_bench/loader.py` with `load_dataset(path)` and `index_by_id(dataset)` functions. Created `scripts/swe_bench/tests/test_loader.py` with 8 unittest tests covering happy paths and error cases.
+- Files changed: scripts/swe_bench/loader.py (new), scripts/swe_bench/tests/__init__.py (new), scripts/swe_bench/tests/test_loader.py (new), PRD.md (updated)
+- Learnings for future iterations:
+  - pytest is NOT available and cannot be installed (no network). Use `unittest` from stdlib instead.
+  - Run tests with `python -m unittest scripts/swe_bench/tests/test_<module>.py -v`
+  - The `scripts/swe_bench/tests/` directory now exists with `__init__.py`
+  - Import path setup: `sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent.parent))` to import from repo root
+---

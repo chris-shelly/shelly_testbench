@@ -32,11 +32,11 @@ The dataset lives on disk as a committed JSON file (`scripts/swe_bench/data/swe_
 **Description:** As a developer, I want a Python module that loads and indexes the dataset JSON so callers can look up instances by ID.
 
 **Acceptance Criteria:**
-- [ ] Create `scripts/swe_bench/loader.py` with `load_dataset(path)` returning a list of dicts and `index_by_id(dataset)` returning `dict[str, dict]`
-- [ ] `load_dataset` raises a clear error if the JSON file is missing or malformed
-- [ ] `index_by_id` raises on duplicate `instance_id`
-- [ ] Add a smoke test at `scripts/swe_bench/tests/test_loader.py` that loads the real dataset and asserts count > 0 and all entries have required keys
-- [ ] Typecheck passes
+- [x] Create `scripts/swe_bench/loader.py` with `load_dataset(path)` returning a list of dicts and `index_by_id(dataset)` returning `dict[str, dict]`
+- [x] `load_dataset` raises a clear error if the JSON file is missing or malformed
+- [x] `index_by_id` raises on duplicate `instance_id`
+- [x] Add a smoke test at `scripts/swe_bench/tests/test_loader.py` that loads the real dataset and asserts count > 0 and all entries have required keys
+- [x] Typecheck passes
 
 ### US-003: Instance selector CLI flags
 **Description:** As a user, I want to choose which instances to materialize so I can stage a single instance, the first N, or the full set.
