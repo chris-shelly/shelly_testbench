@@ -89,11 +89,11 @@ The dataset lives on disk as a committed JSON file (`scripts/swe_bench/data/swe_
 **Description:** As a user, I want the fetcher to assemble `PRD.md`, `progress.md`, `README.md`, `unit_tests.sh`, `testconfig.json`, and `tests/` into each `repos/<instance_id>/` so it matches the testbench's required repo layout.
 
 **Acceptance Criteria:**
-- [ ] Create `scripts/swe_bench/writer.py` with `write_repo(instance, repos_root, source_dir)` that creates `repos/<instance_id>/` containing: `PRD.md`, empty `progress.md`, a brief `README.md` naming the upstream repo and issue, `unit_tests.sh` (mode 0755), `testconfig.json` declaring `critical_inputs: ["source/"]` and `outputs: ["source/"]`, and a `tests/` dir with a `.gitkeep`
-- [ ] `source_dir` (the cloned upstream checkout) is moved into `repos/<instance_id>/source/`
-- [ ] Refuses to overwrite an existing `repos/<instance_id>/` unless `--force` is set (surfaced through the CLI in US-008)
-- [ ] Add `scripts/swe_bench/tests/test_writer.py` using a synthetic instance and a fake source dir
-- [ ] Typecheck passes
+- [x] Create `scripts/swe_bench/writer.py` with `write_repo(instance, repos_root, source_dir)` that creates `repos/<instance_id>/` containing: `PRD.md`, empty `progress.md`, a brief `README.md` naming the upstream repo and issue, `unit_tests.sh` (mode 0755), `testconfig.json` declaring `critical_inputs: ["source/"]` and `outputs: ["source/"]`, and a `tests/` dir with a `.gitkeep`
+- [x] `source_dir` (the cloned upstream checkout) is moved into `repos/<instance_id>/source/`
+- [x] Refuses to overwrite an existing `repos/<instance_id>/` unless `--force` is set (surfaced through the CLI in US-008)
+- [x] Add `scripts/swe_bench/tests/test_writer.py` using a synthetic instance and a fake source dir
+- [x] Typecheck passes
 
 ### US-008: fetch.sh CLI entrypoint
 **Description:** As a user, I want one command to run the whole pipeline so materializing instances is a single invocation.

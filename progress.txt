@@ -59,3 +59,14 @@
   - The `test_results.json` contract matches the existing `run_test.sh` expectation (jq-parsed `{passed, failed, errors}`)
   - 17/17 tests passed (16 on first run, 1 fixed — escaped quote assertion)
 ---
+
+## Iteration 7 - US-007: Per-repo scaffolding writer
+- What was implemented: Created `scripts/swe_bench/writer.py` with `write_repo(instance, repos_root, source_dir, *, force=False)` that assembles a full testbench repo layout: PRD.md (via render_prd), empty progress.md, brief README.md, executable unit_tests.sh (via render_unit_tests), testconfig.json with critical_inputs/outputs, tests/.gitkeep, and moves source_dir into source/. Refuses overwrite unless force=True. Created `scripts/swe_bench/tests/test_writer.py` with 13 tests.
+- Files changed: scripts/swe_bench/writer.py (new), scripts/swe_bench/tests/test_writer.py (new), PRD.md (updated), progress.txt (updated)
+- Learnings for future iterations:
+  - `shutil.move(str(src), str(dst))` works for moving dirs; use str() for Python 3.8 compat
+  - `tempfile.mkdtemp()` + manual `shutil.rmtree` in tearDown is the pattern for filesystem tests
+  - writer.py imports from prd.py and unit_tests_template.py — these modules are stable
+  - The `force` parameter is a keyword-only arg; US-008 CLI will surface it as `--force`
+  - 13/13 tests passed on first run
+---
