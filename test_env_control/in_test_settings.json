@@ -19,8 +19,21 @@
     "allowUnsandboxedCommands": false,
     "autoAllowBashIfSandboxed": true,
     "filesystem": {
-      "denyRead": ["../"],
-      "allowRead": ["./**"]
+      "denyRead": [
+        "../../results/**",
+        "../../repos/**",
+        "../../scripts/**",
+        "../../harnesses/**",
+        "../../docs/**",
+        "../../.claude/**"
+      ],
+      "allowRead": [
+        "./**",
+        "/tmp/**",
+        "/proc/**",
+        "~/.claude/**",
+        "~/.local/share/claude/**"
+      ]
     }
 
   }

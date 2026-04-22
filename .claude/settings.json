@@ -2,6 +2,9 @@
   "showClearContextOnPlanAccept": true,
   "autoMemoryEnabled": false,
   "disableAllHooks": true,
+  "permissions": {
+
+  },
   "hooks": {
     "PreToolUse": [
       {
@@ -20,8 +23,10 @@
     "allowUnsandboxedCommands": false,
     "autoAllowBashIfSandboxed": true,
     "filesystem": {
-      "denyRead": ["../"],
-      "allowRead": ["./**"]
+      "denyRead": ["~/"],
+      "allowRead": [
+        "."
+      ]
     }
 
   }

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-MAX=${1:-10}
+MAX=${1:-1}
 SLEEP=${2:-2}
 
 echo "Starting Ralph - Max $MAX iterations"
@@ -12,7 +12,7 @@ for ((i=1; i<=$MAX; i++)); do
     echo "  Iteration $i of $MAX"
     echo "==========================================="
 
-    result=$(claude --dangerously-skip-permissions -p "You are Ralph, an autonomous coding agent. Do exactly ONE task per iteration.
+    result=$(claude --output-format stream-json --verbose --dangerously-skip-permissions -p "You are Ralph, an autonomous coding agent. Do exactly ONE task per iteration.
 
 ## Steps
 
@@ -57,7 +57,7 @@ If you discover a reusable pattern that future work should know about:
 
 After completing your task, check PRD.md:
 - If ALL tasks are [x], output exactly: <promise>COMPLETE</promise>
-- If tasks remain [ ], just end your response (next iteration will continue)")
+- If tasks remain [ ], just end your response (next iteration will continue)" > ralph_stream.jsonl)
 
     echo "$result"
     echo ""
