@@ -65,14 +65,14 @@ The dataset lives on disk as a committed JSON file (`scripts/swe_bench/data/swe_
 **Description:** As a user, I want the GitHub issue text converted into a Ralph-compatible `PRD.md` so the agent has a structured spec to work from.
 
 **Acceptance Criteria:**
-- [ ] Create `scripts/swe_bench/prd.py` with `render_prd(instance) -> str` returning markdown
-- [ ] Output includes: `# PRD: <instance_id>`, an `## Introduction` section that embeds the raw `problem_statement`, a `## Goals` section naming the failing tests to fix, and a `## User Stories` section with:
+- [x] Create `scripts/swe_bench/prd.py` with `render_prd(instance) -> str` returning markdown
+- [x] Output includes: `# PRD: <instance_id>`, an `## Introduction` section that embeds the raw `problem_statement`, a `## Goals` section naming the failing tests to fix, and a `## User Stories` section with:
   - US-001: "Read upstream codebase and reproduce the failure" — acceptance criterion: at least one `FAIL_TO_PASS` test runs and fails when invoked
   - US-002: "Implement the fix" — acceptance criteria: all `FAIL_TO_PASS` tests pass, all `PASS_TO_PASS` tests still pass, typecheck passes
-- [ ] Includes a `## Non-Goals` section: no dependency upgrades, no refactors outside the fix scope, no changes to test files
-- [ ] Includes `## Technical Considerations` listing `base_commit`, `repo`, and Python `version` from the instance
-- [ ] Add `scripts/swe_bench/tests/test_prd.py` asserting the rendered markdown contains each required section
-- [ ] Typecheck passes
+- [x] Includes a `## Non-Goals` section: no dependency upgrades, no refactors outside the fix scope, no changes to test files
+- [x] Includes `## Technical Considerations` listing `base_commit`, `repo`, and Python `version` from the instance
+- [x] Add `scripts/swe_bench/tests/test_prd.py` asserting the rendered markdown contains each required section
+- [x] Typecheck passes
 
 ### US-006: unit_tests.sh generator
 **Description:** As a user, I want a generated `unit_tests.sh` that runs the full upstream suite filtered to the instance's tests and reports `{passed, failed, errors}`.

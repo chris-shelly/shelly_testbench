@@ -37,3 +37,13 @@
   - The idempotency check uses `git rev-parse HEAD` — only 1 subprocess call when already at correct commit
   - 11/11 tests passed on first run
 ---
+
+## Iteration 5 - US-005: PRD generator from problem_statement
+- What was implemented: Created `scripts/swe_bench/prd.py` with `render_prd(instance) -> str` that generates a Ralph-compatible PRD.md from a SWE-bench instance. Includes `# PRD: <instance_id>`, `## Introduction` (raw problem_statement), `## Goals` (failing tests to fix), `## User Stories` (US-001 reproduce, US-002 fix), `## Non-Goals`, and `## Technical Considerations`. Created `scripts/swe_bench/tests/test_prd.py` with 14 tests covering all sections, edge cases (empty/malformed test lists), and multiple failing tests.
+- Files changed: scripts/swe_bench/prd.py (new), scripts/swe_bench/tests/test_prd.py (new), PRD.md (updated), progress.txt (updated)
+- Learnings for future iterations:
+  - `FAIL_TO_PASS` and `PASS_TO_PASS` fields are JSON-encoded strings (stringified arrays), need `json.loads()` to parse
+  - `from __future__ import annotations` needed for `list[str]` type hints
+  - `_parse_test_list` handles malformed JSON gracefully by returning empty list
+  - 14/14 tests passed on first run
+---
