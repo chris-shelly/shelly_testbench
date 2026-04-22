@@ -26,3 +26,14 @@
   - Fake dataset dicts with just the fields needed (instance_id, repo) work fine for selector tests — no need for full instance schema
   - 12/12 tests passed on first run
 ---
+
+## Iteration 4 - US-004: Upstream repo cloner at base_commit
+- What was implemented: Created `scripts/swe_bench/clone.py` with `clone_at_commit(repo, base_commit, dest_dir)` that does a partial clone (`--filter=blob:none --no-checkout`), fetches the exact commit at depth 1, and checks it out. Handles idempotency (skips if HEAD already matches), cleanup on failure, and includes repo/commit in error messages. Created `scripts/swe_bench/tests/test_clone.py` with 11 tests covering happy path, idempotency, and failure scenarios using mocked subprocess calls.
+- Files changed: scripts/swe_bench/clone.py (new), scripts/swe_bench/tests/test_clone.py (new), PRD.md (updated), progress.txt (updated)
+- Learnings for future iterations:
+  - Network is still blocked — tests must mock `subprocess.run` for any git/network operations
+  - `unittest.mock.patch("scripts.swe_bench.clone.subprocess.run")` patches at the right level
+  - `mock_run.side_effect = [result1, result2, ...]` works well for sequential subprocess calls
+  - The idempotency check uses `git rev-parse HEAD` — only 1 subprocess call when already at correct commit
+  - 11/11 tests passed on first run
+---

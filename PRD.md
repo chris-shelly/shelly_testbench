@@ -54,12 +54,12 @@ The dataset lives on disk as a committed JSON file (`scripts/swe_bench/data/swe_
 **Description:** As a user, I want each generated repo to contain the upstream project checked out at the correct `base_commit` so the agent sees the exact pre-fix state.
 
 **Acceptance Criteria:**
-- [ ] Create `scripts/swe_bench/clone.py` with `clone_at_commit(repo, base_commit, dest_dir)` that shallow-fetches `base_commit` and checks it out into `dest_dir/source/`
-- [ ] Uses `git clone --filter=blob:none --no-checkout`, then `git fetch --depth 1 origin <base_commit>`, then `git checkout <base_commit>` to minimize transfer
-- [ ] On failure, removes `dest_dir/source/` and raises with the repo, commit, and git stderr included
-- [ ] Idempotent: if `dest_dir/source/.git` already exists at the requested commit, it is a no-op
-- [ ] Add `scripts/swe_bench/tests/test_clone.py` using a small public repo and a known commit
-- [ ] Typecheck passes
+- [x] Create `scripts/swe_bench/clone.py` with `clone_at_commit(repo, base_commit, dest_dir)` that shallow-fetches `base_commit` and checks it out into `dest_dir/source/`
+- [x] Uses `git clone --filter=blob:none --no-checkout`, then `git fetch --depth 1 origin <base_commit>`, then `git checkout <base_commit>` to minimize transfer
+- [x] On failure, removes `dest_dir/source/` and raises with the repo, commit, and git stderr included
+- [x] Idempotent: if `dest_dir/source/.git` already exists at the requested commit, it is a no-op
+- [x] Add `scripts/swe_bench/tests/test_clone.py` using a small public repo and a known commit
+- [x] Typecheck passes
 
 ### US-005: PRD generator from problem_statement
 **Description:** As a user, I want the GitHub issue text converted into a Ralph-compatible `PRD.md` so the agent has a structured spec to work from.
