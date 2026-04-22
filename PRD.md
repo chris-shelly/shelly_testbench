@@ -120,10 +120,10 @@ The dataset lives on disk as a committed JSON file (`scripts/swe_bench/data/swe_
 **Description:** As a user of the testbench, I want the root `README.md` to point at the SWE-bench fetcher so I know how to populate `repos/` from the dataset.
 
 **Acceptance Criteria:**
-- [ ] Add a short "Populating repos from SWE-bench" subsection under the existing `## /repos` section in the top-level `README.md`
-- [ ] Section shows the `./scripts/swe_bench/fetch.sh --limit 5` example and links to `scripts/swe_bench/README.md`
-- [ ] No changes to unrelated README content
-- [ ] Typecheck passes
+- [x] Add a short "Populating repos from SWE-bench" subsection under the existing `## /repos` section in the top-level `README.md`
+- [x] Section shows the `./scripts/swe_bench/fetch.sh --limit 5` example and links to `scripts/swe_bench/README.md`
+- [x] No changes to unrelated README content
+- [x] Typecheck passes
 
 ## Non-Goals
 

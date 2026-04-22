@@ -128,6 +128,17 @@ Requires a  `<repo>/tests` directory and `unit_test.sh` script that runs those t
 
 You can either create your own repo from scratch, or use help from an LLM.
 
+### Populating repos from SWE-bench
+
+You can also auto-generate repos from the [SWE-bench Verified](https://www.swebench.com/) dataset. The fetcher clones the upstream project at the correct `base_commit`, converts the issue into a `PRD.md`, and wires up `unit_tests.sh` — ready for a test run.
+
+```bash
+# Materialize the first 5 SWE-bench Verified instances
+./scripts/swe_bench/fetch.sh --limit 5
+```
+
+See [`scripts/swe_bench/README.md`](scripts/swe_bench/README.md) for the full flag reference and dataset details.
+
 ## `/harnesses`
 The Claude Code CLI agent "harness" layers, where you have your `.claude/` folder, `agent_entry.sh` entrypoint, and any other files you need for you to run Claude Code with a specific set of context components.
 
