@@ -42,13 +42,13 @@ The dataset lives on disk as a committed JSON file (`scripts/swe_bench/data/swe_
 **Description:** As a user, I want to choose which instances to materialize so I can stage a single instance, the first N, or the full set.
 
 **Acceptance Criteria:**
-- [ ] Create `scripts/swe_bench/select.py` exposing `select_instances(dataset, *, instance_ids=None, limit=None, all_=False) -> list[dict]`
-- [ ] Exactly one of `instance_ids`, `limit`, `all_` must be set (raise `ValueError` otherwise)
-- [ ] `instance_ids` is a list of strings; unknown IDs raise with the missing IDs listed
-- [ ] `limit` returns the first N instances in dataset order
-- [ ] `all_=True` returns the full list
-- [ ] Add `scripts/swe_bench/tests/test_select.py` covering all three modes plus error paths
-- [ ] Typecheck passes
+- [x] Create `scripts/swe_bench/select.py` exposing `select_instances(dataset, *, instance_ids=None, limit=None, all_=False) -> list[dict]`
+- [x] Exactly one of `instance_ids`, `limit`, `all_` must be set (raise `ValueError` otherwise)
+- [x] `instance_ids` is a list of strings; unknown IDs raise with the missing IDs listed
+- [x] `limit` returns the first N instances in dataset order
+- [x] `all_=True` returns the full list
+- [x] Add `scripts/swe_bench/tests/test_select.py` covering all three modes plus error paths
+- [x] Typecheck passes
 
 ### US-004: Upstream repo cloner at base_commit
 **Description:** As a user, I want each generated repo to contain the upstream project checked out at the correct `base_commit` so the agent sees the exact pre-fix state.

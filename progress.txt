@@ -17,3 +17,12 @@
   - The `scripts/swe_bench/tests/` directory now exists with `__init__.py`
   - Import path setup: `sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent.parent))` to import from repo root
 ---
+
+## Iteration 3 - US-003: Instance selector CLI flags
+- What was implemented: Created `scripts/swe_bench/select.py` with `select_instances(dataset, *, instance_ids=None, limit=None, all_=False)`. Created `scripts/swe_bench/tests/test_select.py` with 12 unittest tests covering all three selection modes (by IDs, by limit, all) plus error paths (no flags, multiple flags, unknown IDs, zero/negative limit).
+- Files changed: scripts/swe_bench/select.py (new), scripts/swe_bench/tests/test_select.py (new), PRD.md (updated), progress.txt (updated)
+- Learnings for future iterations:
+  - `from __future__ import annotations` is useful for `list[str] | None` type hints on Python 3.9
+  - Fake dataset dicts with just the fields needed (instance_id, repo) work fine for selector tests — no need for full instance schema
+  - 12/12 tests passed on first run
+---
