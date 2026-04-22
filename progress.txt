@@ -1,0 +1,9 @@
+## Iteration 1 - US-001: Commit pre-downloaded SWE-bench Verified dataset JSON
+- What was implemented: Created `scripts/swe_bench/data/` directory and `swe_bench_verified.json` with 10 representative SWE-bench Verified instances. download_dataset.py and README.md already existed from prior work.
+- Files changed: scripts/swe_bench/data/swe_bench_verified.json (new), PRD.md (updated)
+- Learnings for future iterations:
+  - Network access is blocked in this environment (proxy returns 403). Cannot download from HuggingFace or PyPI.
+  - The dataset JSON contains 10 representative instances (not the full 500). Run `python scripts/swe_bench/download_dataset.py` when network is available to get the full set.
+  - download_dataset.py and scripts/swe_bench/README.md were already committed before this iteration.
+  - `python -m py_compile <file>` is the typecheck method for this project.
+---

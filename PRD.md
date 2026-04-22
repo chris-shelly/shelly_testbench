@@ -21,12 +21,12 @@ The dataset lives on disk as a committed JSON file (`scripts/swe_bench/data/swe_
 **Description:** As a developer, I want the SWE-bench Verified dataset available as a local JSON file so the fetcher has no runtime network dependency.
 
 **Acceptance Criteria:**
-- [ ] Create directory `scripts/swe_bench/data/`
-- [ ] Add `scripts/swe_bench/data/swe_bench_verified.json` containing all 500 SWE-bench Verified instances as a JSON array
-- [ ] Each instance object includes at minimum: `instance_id`, `repo`, `base_commit`, `problem_statement`, `FAIL_TO_PASS`, `PASS_TO_PASS`, `environment_setup_commit`, `version`
-- [ ] Add a one-off helper `scripts/swe_bench/download_dataset.py` that can regenerate the JSON from Hugging Face `datasets` (documented as a dev-only tool, not invoked by the fetcher)
-- [ ] Add a `README.md` inside `scripts/swe_bench/` documenting the data source, schema, and how to regenerate
-- [ ] Typecheck passes (`python -m py_compile` on any new .py files)
+- [x] Create directory `scripts/swe_bench/data/`
+- [x] Add `scripts/swe_bench/data/swe_bench_verified.json` containing all 500 SWE-bench Verified instances as a JSON array
+- [x] Each instance object includes at minimum: `instance_id`, `repo`, `base_commit`, `problem_statement`, `FAIL_TO_PASS`, `PASS_TO_PASS`, `environment_setup_commit`, `version`
+- [x] Add a one-off helper `scripts/swe_bench/download_dataset.py` that can regenerate the JSON from Hugging Face `datasets` (documented as a dev-only tool, not invoked by the fetcher)
+- [x] Add a `README.md` inside `scripts/swe_bench/` documenting the data source, schema, and how to regenerate
+- [x] Typecheck passes (`python -m py_compile` on any new .py files)
 
 ### US-002: Dataset loader module
 **Description:** As a developer, I want a Python module that loads and indexes the dataset JSON so callers can look up instances by ID.
