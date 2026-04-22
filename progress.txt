@@ -47,3 +47,15 @@
   - `_parse_test_list` handles malformed JSON gracefully by returning empty list
   - 14/14 tests passed on first run
 ---
+
+## Iteration 6 - US-006: unit_tests.sh generator
+- What was implemented: Created `scripts/swe_bench/unit_tests_template.py` with `render_unit_tests(instance) -> str` that generates a bash script. The script: cd's into source/, installs package via `pip install -e .`, installs pytest + pytest-json-report, runs pytest with explicit node IDs from FAIL_TO_PASS ∪ PASS_TO_PASS, parses the JSON report via jq into `{passed, failed, errors}`, writes `test_results.json`, and exits 0 on test outcomes (1 only on setup failure). Created `scripts/swe_bench/tests/test_unit_tests_template.py` with 17 tests.
+- Files changed: scripts/swe_bench/unit_tests_template.py (new), scripts/swe_bench/tests/test_unit_tests_template.py (new), PRD.md (updated), progress.txt (updated)
+- Learnings for future iterations:
+  - Reused `_parse_test_list` pattern from prd.py for parsing JSON-encoded test lists
+  - f-string bash templates need careful brace escaping: `{{` → `{`, `}}` → `}` for bash braces
+  - Backslash-escaped quotes in f-strings (`\\"`) produce `\"` in output — tests must check for escaped form
+  - `shlex.quote()` is useful for safely quoting test node IDs that may contain special characters
+  - The `test_results.json` contract matches the existing `run_test.sh` expectation (jq-parsed `{passed, failed, errors}`)
+  - 17/17 tests passed (16 on first run, 1 fixed — escaped quote assertion)
+---

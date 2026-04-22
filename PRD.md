@@ -78,12 +78,12 @@ The dataset lives on disk as a committed JSON file (`scripts/swe_bench/data/swe_
 **Description:** As a user, I want a generated `unit_tests.sh` that runs the full upstream suite filtered to the instance's tests and reports `{passed, failed, errors}`.
 
 **Acceptance Criteria:**
-- [ ] Create `scripts/swe_bench/unit_tests_template.py` with `render_unit_tests(instance) -> str` returning a bash script
-- [ ] Generated script `cd`s into `source/`, installs the package in editable mode (`pip install -e .` or the instance's declared install command if present), then runs pytest with `-k` filter or explicit node IDs drawn from `FAIL_TO_PASS ∪ PASS_TO_PASS`
-- [ ] Script captures pytest's JSON report (via `--json-report --json-report-file=/tmp/report.json`) and transforms it into `{"passed": N, "failed": N, "errors": N}` printed to stdout as the final line
-- [ ] Script exits 0 regardless of test outcome (the JSON is the signal); nonzero exit only on setup failure
-- [ ] Add `scripts/swe_bench/tests/test_unit_tests_template.py` asserting the rendered script contains the expected pytest invocation and JSON emission
-- [ ] Typecheck passes
+- [x] Create `scripts/swe_bench/unit_tests_template.py` with `render_unit_tests(instance) -> str` returning a bash script
+- [x] Generated script `cd`s into `source/`, installs the package in editable mode (`pip install -e .` or the instance's declared install command if present), then runs pytest with `-k` filter or explicit node IDs drawn from `FAIL_TO_PASS ∪ PASS_TO_PASS`
+- [x] Script captures pytest's JSON report (via `--json-report --json-report-file=/tmp/report.json`) and transforms it into `{"passed": N, "failed": N, "errors": N}` printed to stdout as the final line
+- [x] Script exits 0 regardless of test outcome (the JSON is the signal); nonzero exit only on setup failure
+- [x] Add `scripts/swe_bench/tests/test_unit_tests_template.py` asserting the rendered script contains the expected pytest invocation and JSON emission
+- [x] Typecheck passes
 
 ### US-007: Per-repo scaffolding writer
 **Description:** As a user, I want the fetcher to assemble `PRD.md`, `progress.md`, `README.md`, `unit_tests.sh`, `testconfig.json`, and `tests/` into each `repos/<instance_id>/` so it matches the testbench's required repo layout.
