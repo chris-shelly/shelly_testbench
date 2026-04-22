@@ -70,3 +70,14 @@
   - The `force` parameter is a keyword-only arg; US-008 CLI will surface it as `--force`
   - 13/13 tests passed on first run
 ---
+
+## Iteration 8 - US-008: fetch.sh CLI entrypoint
+- What was implemented: Created `scripts/swe_bench/__main__.py` with argparse-based CLI (build_parser + main), `scripts/swe_bench/fetch.sh` shell wrapper (mode 0755), and `scripts/swe_bench/tests/test_cli.py` with 12 tests covering --help output, all selector modes (--limit, --instance-ids, --all), --force flag forwarding, per-instance failure resilience, missing dataset error, and multiple instance IDs.
+- Files changed: scripts/swe_bench/__main__.py (new), scripts/swe_bench/fetch.sh (new), scripts/swe_bench/tests/test_cli.py (new), PRD.md (updated), progress.txt (updated)
+- Learnings for future iterations:
+  - `argparse.add_mutually_exclusive_group(required=True)` enforces exactly-one-of for --instance-ids/--limit/--all
+  - `_REPO_ROOT` sys.path insertion in `__main__.py` handles the import path for both `python -m scripts.swe_bench` and direct execution
+  - fetch.sh uses `exec python3 -m scripts.swe_bench "$@"` to forward all args
+  - Mocking `scripts.swe_bench.__main__.clone_at_commit` (not `scripts.swe_bench.clone.clone_at_commit`) patches at the right level
+  - 12/12 tests passed on first run
+---

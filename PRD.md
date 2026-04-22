@@ -99,13 +99,13 @@ The dataset lives on disk as a committed JSON file (`scripts/swe_bench/data/swe_
 **Description:** As a user, I want one command to run the whole pipeline so materializing instances is a single invocation.
 
 **Acceptance Criteria:**
-- [ ] Create `scripts/swe_bench/fetch.sh` (mode 0755) that wraps a Python entry module `scripts/swe_bench/__main__.py`
-- [ ] Flags: `--instance-ids id1,id2,...`, `--limit N`, `--all`, `--force`, `--dataset <path>` (defaults to `scripts/swe_bench/data/swe_bench_verified.json`), `--repos-root <path>` (defaults to `repos/`)
-- [ ] Prints a progress line per instance: `[i/N] <instance_id> cloning… writing… done`
-- [ ] On per-instance failure, logs the error and continues to the next instance; final exit code is nonzero if any instance failed
-- [ ] `--help` lists all flags with descriptions
-- [ ] Add `scripts/swe_bench/tests/test_cli.py` exercising `--help` and a dry-run path
-- [ ] Typecheck passes
+- [x] Create `scripts/swe_bench/fetch.sh` (mode 0755) that wraps a Python entry module `scripts/swe_bench/__main__.py`
+- [x] Flags: `--instance-ids id1,id2,...`, `--limit N`, `--all`, `--force`, `--dataset <path>` (defaults to `scripts/swe_bench/data/swe_bench_verified.json`), `--repos-root <path>` (defaults to `repos/`)
+- [x] Prints a progress line per instance: `[i/N] <instance_id> cloning… writing… done`
+- [x] On per-instance failure, logs the error and continues to the next instance; final exit code is nonzero if any instance failed
+- [x] `--help` lists all flags with descriptions
+- [x] Add `scripts/swe_bench/tests/test_cli.py` exercising `--help` and a dry-run path
+- [x] Typecheck passes
 
 ### US-009: Run manifest
 **Description:** As a user, I want a manifest of each fetch run so I can audit what was written and reproduce the set later.
