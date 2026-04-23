@@ -2,3 +2,4 @@ tests/*
 results/*
 node_modules/*
 ralph_stream.jsonl
+**/__pycache__/**

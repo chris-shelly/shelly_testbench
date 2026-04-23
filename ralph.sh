@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-MAX=${1:-1}
+MAX=${1:-10}
 SLEEP=${2:-2}
 
 echo "Starting Ralph - Max $MAX iterations"
@@ -12,12 +12,12 @@ for ((i=1; i<=$MAX; i++)); do
     echo "  Iteration $i of $MAX"
     echo "==========================================="
 
-    result=$(claude --output-format stream-json --verbose --dangerously-skip-permissions -p "You are Ralph, an autonomous coding agent. Do exactly ONE task per iteration.
+    result=$(claude --dangerously-skip-permissions -p "You are Ralph, an autonomous coding agent. Do exactly ONE task per iteration.
 
 ## Steps
 
 1. Read PRD.md and find the first task that is NOT complete (marked [ ]).
-2. Read progress.txt - check the Learnings section first for patterns from previous iterations.
+2. Read progress.md - check the Learnings section first for patterns from previous iterations.
 3. Implement that ONE task only.
 4. Run tests/typecheck to verify it works.
 
@@ -26,16 +26,16 @@ for ((i=1; i<=$MAX; i++)); do
 - If tests PASS:
   - Update PRD.md to mark the task complete (change [ ] to [x])
   - Commit your changes with message: feat: [task description]
-  - Append what worked to progress.txt
+  - Append what worked to progress.md
 
 - If tests FAIL:
   - Do NOT mark the task complete
   - Do NOT commit broken code
-  - Append what went wrong to progress.txt (so next iteration can learn)
+  - Append what went wrong to progress.md (so next iteration can learn)
 
 ## Progress Notes Format
 
-Append to progress.txt using this format:
+Append to progress.md using this format:
 
 ## Iteration [N] - [Task Name]
 - What was implemented
@@ -57,7 +57,7 @@ If you discover a reusable pattern that future work should know about:
 
 After completing your task, check PRD.md:
 - If ALL tasks are [x], output exactly: <promise>COMPLETE</promise>
-- If tasks remain [ ], just end your response (next iteration will continue)" > ralph_stream.jsonl)
+- If tasks remain [ ], just end your response (next iteration will continue)")
 
     echo "$result"
     echo ""
