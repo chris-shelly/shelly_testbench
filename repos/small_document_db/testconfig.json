@@ -1,4 +1,5 @@
 {
   "critical_inputs":["pyproject.toml"],
+  "fail_if_modified":["unit_tests.sh"],
   "outputs": ["PRD.md", "progress.md"]
 }

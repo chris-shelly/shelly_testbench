@@ -161,7 +161,9 @@ A given test run is stored in a folder of the following pattern `/results/<repo>
 ## `testconfig.json`
 Both harnesses and repos can provide a `testconfig.json` file that lets you specify:
 - `"critical_inputs"`
-  - files that must be in the test folder for the test to be conducted.
+  - files that must be in the test folder for the test to be conducted. This is **only** an existence check — entries here are no longer protected from modification. To protect a file from agent edits, list it under `fail_if_modified` as well.
+- `"fail_if_modified"`
+  - file paths or glob patterns that must be unchanged after the agent runs; if any match is modified, the run fails. Hashes are taken before and after the agent loop. Globs are bash-style (e.g. `src/**/*.py`).
 - `"outputs"`
   - files to capture from the test folder and store in `/results`
 

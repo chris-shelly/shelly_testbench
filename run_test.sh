@@ -98,6 +98,7 @@ validate_config "$REPO_DIR/testconfig.json"
 
 CRITICAL_INPUTS=(".claude/settings.json" "harness/agent_entry.sh" "unit_tests.sh")
 OUTPUT_FILES=()
+FAIL_IF_MODIFIED=()
 while IFS= read -r e; do [ -n "$e" ] && CRITICAL_INPUTS+=("$e"); done < <(
   load_config_array "$HARNESS_DIR" critical_inputs
   load_config_array "$REPO_DIR"    critical_inputs
@@ -106,11 +107,18 @@ while IFS= read -r e; do [ -n "$e" ] && OUTPUT_FILES+=("$e"); done < <(
   load_config_array "$HARNESS_DIR" outputs
   load_config_array "$REPO_DIR"    outputs
 )
+while IFS= read -r e; do [ -n "$e" ] && FAIL_IF_MODIFIED+=("$e"); done < <(
+  load_config_array "$HARNESS_DIR" fail_if_modified
+  load_config_array "$REPO_DIR"    fail_if_modified
+)
 if [ ${#CRITICAL_INPUTS[@]} -gt 0 ]; then
   readarray -t CRITICAL_INPUTS < <(printf '%s\n' "${CRITICAL_INPUTS[@]}" | awk '!s[$0]++')
 fi
 if [ ${#OUTPUT_FILES[@]} -gt 0 ]; then
   readarray -t OUTPUT_FILES < <(printf '%s\n' "${OUTPUT_FILES[@]}" | awk '!s[$0]++')
+fi
+if [ ${#FAIL_IF_MODIFIED[@]} -gt 0 ]; then
+  readarray -t FAIL_IF_MODIFIED < <(printf '%s\n' "${FAIL_IF_MODIFIED[@]}" | awk '!s[$0]++')
 fi
 
 # ── Prepare test folder (idempotent) ────────────────────────────────
@@ -223,11 +231,16 @@ snapshot_test_files() {
   done
   {
     find "${find_args[@]}" | sort | xargs sha256sum
-    # Also hash declared critical inputs so agent edits to things like
-    # pyproject.toml or settings.json are caught by the post-run diff.
-    for f in "${CRITICAL_INPUTS[@]}"; do
-      [ -f "$f" ] && sha256sum "$f"
-    done | sort
+    if [ ${#FAIL_IF_MODIFIED[@]} -gt 0 ]; then
+      (
+        shopt -s globstar nullglob
+        for pat in "${FAIL_IF_MODIFIED[@]}"; do
+          for m in $pat; do
+            [ -f "$m" ] && sha256sum "$m"
+          done
+        done
+      ) | sort
+    fi
   } > "$out"
 }
 
@@ -260,7 +273,8 @@ echo ""
 echo "=== Verifying test file integrity ==="
 snapshot_test_files "$CHECKSUMS_AFTER"
 if ! diff -q "$CHECKSUMS_BEFORE" "$CHECKSUMS_AFTER" > /dev/null 2>&1; then
-  echo "ERROR: Test files were modified during the agent run!"
+  echo "ERROR: Protected files were modified during the agent run."
+  echo "(Covered: tests/** and any fail_if_modified patterns from testconfig.json.)"
   echo "Differences:"
   diff "$CHECKSUMS_BEFORE" "$CHECKSUMS_AFTER" || true
   exit 1
