@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import argparse
+import shutil
 import sys
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -102,9 +104,10 @@ def main(argv: list[str] | None = None) -> int:
         repo = instance["repo"]
         base_commit = instance["base_commit"]
 
+        staging_root = Path(tempfile.mkdtemp(prefix=f"swe_bench_{iid}_"))
         try:
             print(f"[{i}/{total}] {iid} cloning…", end=" ", flush=True)
-            source_dir = clone_at_commit(repo, base_commit, Path(args.repos_root) / iid)
+            source_dir = clone_at_commit(repo, base_commit, staging_root)
 
             print("writing…", end=" ", flush=True)
             write_repo(instance, args.repos_root, source_dir, force=args.force)
@@ -120,6 +123,8 @@ def main(argv: list[str] | None = None) -> int:
             manifest_entries.append(
                 build_instance_entry(instance, "failed", error=str(exc))
             )
+        finally:
+            shutil.rmtree(staging_root, ignore_errors=True)
 
     # Write manifest even on partial failure
     timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H-%M-%SZ")

@@ -228,5 +228,74 @@ class TestDryRunPipeline(unittest.TestCase):
         self.assertEqual(mock_write.call_count, 2)
 
 
+class TestCliIntegration(unittest.TestCase):
+    """End-to-end pipeline with only clone_at_commit mocked.
+
+    Unlike TestDryRunPipeline, this runs the real write_repo so we catch
+    integration bugs between clone_at_commit and write_repo (e.g. the
+    staging-dir collision that caused all instances to be skipped).
+    """
+
+    def setUp(self):
+        self.tmpdir = tempfile.mkdtemp()
+        self.dataset_path = Path(self.tmpdir) / "dataset.json"
+        self.repos_root = Path(self.tmpdir) / "repos"
+        self.repos_root.mkdir()
+        self.instance = _make_instance()
+        self.dataset_path.write_text(json.dumps([self.instance]))
+
+    def tearDown(self):
+        shutil.rmtree(self.tmpdir, ignore_errors=True)
+
+    @patch("scripts.swe_bench.__main__.clone_at_commit")
+    def test_pipeline_produces_full_scaffold(self, mock_clone):
+        """Clone mock mimics real contract; writer runs for real."""
+
+        def fake_clone(repo, base_commit, dest_dir):
+            dest_dir = Path(dest_dir)
+            source = dest_dir / "source"
+            source.mkdir(parents=True, exist_ok=True)
+            (source / "placeholder.txt").write_text("fake checkout\n")
+            return source
+
+        mock_clone.side_effect = fake_clone
+
+        exit_code = main([
+            "--limit", "1",
+            "--dataset", str(self.dataset_path),
+            "--repos-root", str(self.repos_root),
+        ])
+
+        self.assertEqual(exit_code, 0)
+
+        iid = self.instance["instance_id"]
+        repo_dir = self.repos_root / iid
+
+        prd = repo_dir / "PRD.md"
+        self.assertTrue(prd.exists(), f"{prd} missing")
+        self.assertIn(f"# PRD: {iid}", prd.read_text())
+
+        unit_tests = repo_dir / "unit_tests.sh"
+        self.assertTrue(unit_tests.exists(), f"{unit_tests} missing")
+        mode = unit_tests.stat().st_mode & 0o777
+        self.assertEqual(mode, 0o755, f"unit_tests.sh mode is {oct(mode)}")
+
+        self.assertTrue((repo_dir / "README.md").exists())
+        self.assertTrue((repo_dir / "progress.md").exists())
+        self.assertTrue((repo_dir / "testconfig.json").exists())
+        self.assertTrue((repo_dir / "tests").is_dir())
+        self.assertTrue((repo_dir / "source").is_dir())
+        self.assertTrue((repo_dir / "source" / "placeholder.txt").exists())
+
+        manifest_dir = Path(__file__).resolve().parent.parent / "manifest"
+        manifest_files = sorted(manifest_dir.glob("*.json"))
+        self.assertTrue(manifest_files, "no manifest file written")
+        latest = json.loads(manifest_files[-1].read_text())
+        entry = next(
+            e for e in latest["instances"] if e["instance_id"] == iid
+        )
+        self.assertEqual(entry["status"], "written")
+
+
 if __name__ == "__main__":
     unittest.main()

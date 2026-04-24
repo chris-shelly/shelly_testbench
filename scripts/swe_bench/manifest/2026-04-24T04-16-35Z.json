@@ -1,0 +1,23 @@
+{
+  "timestamp": "2026-04-24T04-16-35Z",
+  "dataset_path": "/tmp/claude-1000/tmpyb479a7l/dataset.json",
+  "dataset_sha256": "324d17790ff15509a330aaecf78bda25869617aea05f09b294688ba85392b999",
+  "cli_args": [
+    "--limit",
+    "1",
+    "--dataset",
+    "/tmp/claude-1000/tmpyb479a7l/dataset.json",
+    "--repos-root",
+    "/tmp/claude-1000/tmpyb479a7l/repos"
+  ],
+  "instances": [
+    {
+      "instance_id": "django__django-11039",
+      "repo": "django/django",
+      "base_commit": "35431298226165986ad07e91f9d3aca721ff38ec",
+      "status": "written",
+      "fail_to_pass": 1,
+      "pass_to_pass": 1
+    }
+  ]
+}
